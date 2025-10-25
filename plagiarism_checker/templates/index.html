@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plagiarism Detector AI | Advanced Document Analysis</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-animation">
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+    </div>
+
+    <!-- Particle Effect -->
+    <canvas id="particles"></canvas>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo-container">
+                <div class="logo-ring"></div>
+                <h1 class="logo-text">PLAGIARISM<span class="accent">AI</span></h1>
+            </div>
+            <p class="tagline">Advanced Multi-Algorithm Document Analysis System</p>
+            <div class="header-stats">
+                <div class="stat-item">
+                    <span class="stat-value">4</span>
+                    <span class="stat-label">Algorithms</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">99%</span>
+                    <span class="stat-label">Accuracy</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">< 1s</span>
+                    <span class="stat-label">Analysis Time</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="main-panel">
+            <!-- Input Section -->
+            <div class="input-grid">
+                <div class="input-panel">
+                    <div class="panel-header">
+                        <span class="panel-icon">📄</span>
+                        <h3>Document Alpha</h3>
+                        <div class="char-count" id="count1">0 characters</div>
+                    </div>
+                    <textarea id="text1" placeholder="Paste or type first document here..."></textarea>
+                </div>
+
+                <div class="vs-divider">
+                    <div class="vs-circle">VS</div>
+                    <div class="vs-line"></div>
+                </div>
+
+                <div class="input-panel">
+                    <div class="panel-header">
+                        <span class="panel-icon">📑</span>
+                        <h3>Document Beta</h3>
+                        <div class="char-count" id="count2">0 characters</div>
+                    </div>
+                    <textarea id="text2" placeholder="Paste or type second document here..."></textarea>
+                </div>
+            </div>
+
+            <!-- Control Panel -->
+            <div class="control-panel">
+                <button class="btn btn-primary" onclick="checkPlagiarism()">
+                    <span class="btn-icon">🔍</span>
+                    <span class="btn-text">Analyze Documents</span>
+                    <span class="btn-glow"></span>
+                </button>
+                <button class="btn btn-secondary" onclick="loadSample()">
+                    <span class="btn-icon">📊</span>
+                    <span class="btn-text">Load Sample</span>
+                </button>
+                <button class="btn btn-danger" onclick="clearAll()">
+                    <span class="btn-icon">🗑️</span>
+                    <span class="btn-text">Clear All</span>
+                </button>
+            </div>
+
+            <!-- Loading State -->
+            <div class="loading-container" id="loading">
+                <div class="loading-ring">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+                <p class="loading-text">Analyzing Documents...</p>
+                <div class="loading-progress">
+                    <div class="loading-bar"></div>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="results-container" id="results">
+                <!-- Overall Score -->
+                <div class="score-display">
+                    <div class="score-circle">
+                        <svg class="score-svg" viewBox="0 0 200 200">
+                            <circle class="score-bg" cx="100" cy="100" r="90"></circle>
+                            <circle class="score-fill" id="scoreCircle" cx="100" cy="100" r="90"></circle>
+                        </svg>
+                        <div class="score-content">
+                            <div class="score-value" id="overallScore">0%</div>
+                            <div class="score-label">Similarity</div>
+                        </div>
+                    </div>
+                    <div class="score-verdict" id="verdict">
+                        <h3 id="verdictTitle">Analysis Complete</h3>
+                        <p id="verdictText">Results ready for review</p>
+                    </div>
+                </div>
+
+                <!-- Metrics Dashboard -->
+                <div class="metrics-dashboard">
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <span class="metric-icon">🔤</span>
+                            <h4>N-Gram Match</h4>
+                        </div>
+                        <div class="metric-value" id="ngramScore">0%</div>
+                        <div class="metric-bar">
+                            <div class="metric-fill" id="ngramBar"></div>
+                        </div>
+                        <p class="metric-desc">Sequence-based comparison</p>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <span class="metric-icon">🔐</span>
+                            <h4>Fingerprint</h4>
+                        </div>
+                        <div class="metric-value" id="fingerprintScore">0%</div>
+                        <div class="metric-bar">
+                            <div class="metric-fill" id="fingerprintBar"></div>
+                        </div>
+                        <p class="metric-desc">Hash-based detection</p>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <span class="metric-icon">📐</span>
+                            <h4>Cosine Score</h4>
+                        </div>
+                        <div class="metric-value" id="cosineScore">0%</div>
+                        <div class="metric-bar">
+                            <div class="metric-fill" id="cosineBar"></div>
+                        </div>
+                        <p class="metric-desc">Vector similarity</p>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <span class="metric-icon">🔗</span>
+                            <h4>Common Words</h4>
+                        </div>
+                        <div class="metric-value" id="commonWords">0</div>
+                        <div class="metric-bar">
+                            <div class="metric-fill" id="commonBar"></div>
+                        </div>
+                        <p class="metric-desc">Longest match sequence</p>
+                    </div>
+                </div>
+
+                <!-- Common Text Display -->
+                <div class="common-text-panel">
+                    <h3>🔍 Longest Common Substring</h3>
+                    <div class="common-text-content" id="commonText">
+                        No common text found
+                    </div>
+                </div>
+
+                <!-- Algorithm Info -->
+                <div class="algorithm-info">
+                    <h3>🧠 Algorithms Used</h3>
+                    <div class="algo-grid">
+                        <div class="algo-item">
+                            <div class="algo-badge">1</div>
+                            <h4>N-Gram Analysis</h4>
+                            <p>Jaccard similarity on word sequences</p>
+                        </div>
+                        <div class="algo-item">
+                            <div class="algo-badge">2</div>
+                            <h4>Winnowing</h4>
+                            <p>Rabin-Karp rolling hash fingerprints</p>
+                        </div>
+                        <div class="algo-item">
+                            <div class="algo-badge">3</div>
+                            <h4>TF-IDF</h4>
+                            <p>Cosine similarity on term vectors</p>
+                        </div>
+                        <div class="algo-item">
+                            <div class="algo-badge">4</div>
+                            <h4>Dynamic Programming</h4>
+                            <p>Longest common substring detection</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
